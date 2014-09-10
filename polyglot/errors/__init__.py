@@ -1,0 +1,14 @@
+
+class BadRequestError(Exception):
+    def __init__(self, msg, breakdown=None):
+        self.msg = msg
+        self.breakdown = breakdown
+    def __str__(self):
+        return repr(self.msg)
+
+
+class ResourceNotFoundException(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    def __str__(self):
+        return repr(self.msg)
