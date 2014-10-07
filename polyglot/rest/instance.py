@@ -12,17 +12,17 @@ instances = Blueprint('instance_apis', __name__,
     static_folder='static')
 
 
-@instances.route('/schemas/<schema_id>/tables/<table_id>/instances', methods=['GET'])
-def get_all_instances(schema_id, table_id):
+@instances.route('/tenants/<tenant_id>/schemas/<schema_id>/tables/<table_id>/instances', methods=['GET'])
+def get_all_instances(tenant_id, schema_id, table_id):
     """
     """
-    return json.dumps([instance.instance_data for instance in retrieve_all_instances(schema_id, table_id)], remove_OIDs)
+    return json.dumps([instance.instance_data for instance in retrieve_all_instances(tenant_id, schema_id, table_id)], remove_OIDs)
 
 
-@instances.route('/schemas/<schema_id>/tables/<table_id>/instances', methods=['POST'])
-def save_new_instance(schema_id, table_id):
+@instances.route('/tenants/<tenant_id>/schemas/<schema_id>/tables/<table_id>/instances', methods=['POST'])
+def save_new_instance(tenant_id, schema_id, table_id):
     """
     """
-    instance = save_instance(json.loads(request.data), schema_id, table_id, uuid.uuid4())
+    instance = save_instance(json.loads(request.data), tenant_id, schema_id, table_id, uuid.uuid4())
     return json.dumps(instance, default=remove_OIDs)
 

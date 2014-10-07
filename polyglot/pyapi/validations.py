@@ -161,8 +161,6 @@ def convert_to(verifield, required):
     :param required: Type to convert the item to
     :type required: type
     """
-    import pdb
-    pdb.set_trace()
     try:
         verifield = [required(verifi) for verifi in verifield]
         return True
@@ -219,6 +217,29 @@ def subfields_none(verifield, required):
 
 
 subfields_none.arg_type = dict
+
+
+def unique_field_value(verifield, unique_to_check):
+    """ Checks if an item is already stored in the db with the same tenant, schema, table, field, and value combo
+    :param required: Key-values of tenant, schema, table, and field to check the value against
+    :returns: bool -- True if the combo does not already exist in the DB
+    """
+    from polyglot.pyapi.unique import value_combo_exists
+    return not value_combo_exists(verifield, **unique_to_check)
+
+
+class CallableClass:
+
+    def __init__(self, function, additional_info):
+        self.function = function
+        self.additional_info = additional_info
+    
+    def __call__(self, *args, **kwargs):
+        """Uses things to do stuff"""
+        return function(args, addtional_info)
+
+
+unique_field_value.arg_type = CallableClass
     
 
 def validation_runner(val_funk, field, value, requires):

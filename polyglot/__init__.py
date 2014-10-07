@@ -24,7 +24,7 @@ APP.secret_key = str(uuid.uuid1())
 
 
 
-APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://docker:docker@localhost:49155/docker'
+APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://docker:docker@192.168.59.103:49155/docker'
 APP.config['REDIS_URL'] = "redis://localhost:6379/3"
 APP.config['REDIS_HASH_FBN'] = 'field_by_name'
 
@@ -43,7 +43,8 @@ LM.init_app(APP)
 principals = Principal(APP)
 
 
-from polyglot.rest import handlers
+from polyglot.rest.handlers import errors
+APP.register_blueprint(errors)
 from polyglot.rest.meta import meta
 APP.register_blueprint(meta)
 from polyglot.rest.instance import instances

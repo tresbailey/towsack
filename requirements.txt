@@ -22,6 +22,8 @@ python-dateutil==2.1
 pytz==2013b
 simplejson==3.3.0
 wsgiref==0.1.2
-psycopg2
+psycopg2==2.5.4
 redis==2.8.0
-flask-redis
+flask-redis==0.0.6
+click==0.1
+requests==2.4.1

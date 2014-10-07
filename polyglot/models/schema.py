@@ -10,6 +10,7 @@ from uuid import UUID
 class Instance(AppModel):
     _tablename__ = 'instances'
     id = Column(GUID, primary_key=True)
+    tenant_id = Column(GUID, ForeignKey('tenants.id'))
     schema_id = Column(GUID, ForeignKey('schemas.id'))
     table_id = Column(GUID, ForeignKey('tables.id'))
     instance_data = Column(JSONB)
@@ -22,29 +23,34 @@ class Instance(AppModel):
 class Unique(AppModel):
     __tablename__ = 'uniques'
     id = Column(GUID, primary_key=True)
+    tenant_id = Column(GUID, ForeignKey('tenants.id'))
     schema_id = Column(GUID, ForeignKey('schemas.id'))
     table_id = Column(GUID, ForeignKey('tables.id'))
-    field_id = Column(GUID, ForeignKey('fields.id'))
+    instance_id = Column(GUID, ForeignKey('instance.id'))
     unique_value = Column(JSONB)
     _validations = {
+        'tenant_id': ((is_type, UUID),),
         'schema_id': ((is_type, UUID),),
         'table_id': ((is_type, UUID),),
-        'field_id': ((is_type, UUID),),
+        'instance_id': ((is_type, UUID),),
         'unique_value': ((is_type, dict), (not_empty, True))
     }
+    __table_args__ = (UniqueConstraint('table_id', 'schema_id', 'tenant_id', 'unique_value', name='unique_table_unique'),)
 
 
 class Index(AppModel):
     __tablename__ = 'indexes'
     id = Column(GUID, primary_key=True)
+    tenant_id = Column(GUID, ForeignKey('tenants.id'))
     schema_id = Column(GUID, ForeignKey('schemas.id'))
     table_id = Column(GUID, ForeignKey('tables.id'))
-    field_id = Column(GUID, ForeignKey('fields.id'))
+    instance_id = Column(GUID, ForeignKey('instance.id'))
     index_value = Column(JSONB)
     _validations = {
+        'tenant_id': ((is_type, UUID),),
         'schema_id': ((is_type, UUID),),
         'table_id': ((is_type, UUID),),
-        'field_id': ((is_type, UUID),),
+        'instance_id': ((is_type, UUID),),
         'index_value': ((is_type, dict), (not_empty, True))
     }
 
@@ -55,6 +61,7 @@ class Field(AppModel):
     field_name = Column(String)
     table_id = Column(GUID, ForeignKey('tables.id'))
     schema_id = Column(GUID, ForeignKey('schemas.id'))
+    tenant_id = Column(GUID, ForeignKey('tenants.id'))
     constraints = Column(ARRAY(String))
     index_single = Column(Boolean)
     _validations = {
@@ -62,14 +69,15 @@ class Field(AppModel):
         'table_id': ((is_type, UUID),),
         'constraints': ((list_type, tuple), (not_empty, True), (min_length, 1))
     }
-    __table_args__ = (UniqueConstraint('field_name', 'table_id', 'schema_id', name='unique_table_field'),
-                     )    
+    __table_args__ = (UniqueConstraint('field_name', 'table_id', 'schema_id', name='unique_table_field'),)
+    
 
 class Table(AppModel):
     __tablename__ = 'tables'
     id = Column(GUID, primary_key=True)
     table_name = Column(String)
     schema_id = Column(GUID, ForeignKey('schemas.id'))
+    tenant_id = Column(GUID, ForeignKey('tenants.id'))
     fields = relationship('Field', backref='table')
     _validations = {
         'table_name': ((is_type, str),),
@@ -84,12 +92,12 @@ class Schema(AppModel):
     id = Column(GUID, primary_key=True)
     schema_name = Column(String)
     tables = relationship('Table', backref='schema')
+    tenant_id = Column(GUID, ForeignKey('tenants.id'))
     _validations = {
         'schema_name': ((is_type, str),),
         'tables': ((list_type, Table),)
     }
 
-"""
 class Tenant(AppModel):
     __tablename__ = 'tenants'
     id = Column(GUID, primary_key=True)
@@ -99,4 +107,3 @@ class Tenant(AppModel):
         'tenant_name': ((is_type, str),),
         'schemas': ((list_type, Schema),)
     }
-"""

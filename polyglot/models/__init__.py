@@ -2,7 +2,6 @@ import uuid
 from polyglot import DB
 from sqlalchemy.ext.declarative import AbstractConcreteBase
 
-
 def json_clean(field_value):
     """
     Removes the ObjectID types from an object
@@ -23,7 +22,7 @@ def json_clean(field_value):
    
 
 class AppModel(AbstractConcreteBase, DB.Model):
-    filter_fields = tuple()
+    filter_fields = ('validate', 'clean4_dump', 'get', 'instance_data', 'table', 'query_class', 'has_key', 'filter_out_fields', 'filter_fields', 'query', 'type', 'metadata')
 
     @classmethod
     def has_key(cls, key):
@@ -47,10 +46,10 @@ class AppModel(AbstractConcreteBase, DB.Model):
         response = {}
         for field in self.__table__.columns:
             try:
-                field_value = str(getattr(self, field.name)) 
+                field_value = getattr(self, field.name)
                 response[field.name] = json_clean(field_value)
             except AttributeError:
                 continue
-        response = dict([(key, value) for key, value in response.items() if key not in [field._name for field in self.filter_fields]])
+        response = dict([(key, value) for key, value in response.items() if key not in [field for field in self.filter_fields]])
         return response
 
