@@ -108,6 +108,13 @@ def fields(ctx):
         data=remove_id_tag(field, ('id', 'tenant_id', 'schema_id', 'table_id')),
         headers=ctx.obj['headers']).json()
     ctx.obj['fields'].append(field)
+    # Dict Field
+    field = Field(schema_id=ctx.obj['schemas'][0]['id'], table_id=ctx.obj['tables'][0]['id'], field_name='NOT_BASIC_DICT', constraints=[["is_type","dict"]], index_single=False)
+    field = requests.post('%s/tenants/%s/schemas/%s/tables/%s/fields' % 
+        (ctx.obj['target_url'], ctx.obj['tenants'][0]['id'], ctx.obj['schemas'][0]['id'], ctx.obj['tables'][0]['id']),
+        data=remove_id_tag(field, ('id', 'tenant_id', 'schema_id', 'table_id')),
+        headers=ctx.obj['headers']).json()
+    ctx.obj['fields'].append(field)
     return ctx.obj['fields']
 
 
@@ -115,7 +122,7 @@ def fields(ctx):
 @click.pass_context
 def instances(ctx):
     table = ctx.obj['tables'][0]
-    instance = {"BASIC_STRING":"TRES PASS 1","STRING_LIST":["val1","val2","val3"],"BASIC_INT":1010}
+    instance = {"BASIC_STRING":"TRES PASS 1","STRING_LIST":["val1","val2","val3"],"BASIC_INT":1010,"NOT_BASIC_DICT": {'foo': 'bar', 'baz': 'bat'}}
     instance = requests.post('%s/tenants/%s/schemas/%s/tables/%s/instances' % 
         (ctx.obj['target_url'], ctx.obj['tenants'][0]['id'], ctx.obj['schemas'][0]['id'], ctx.obj['tables'][0]['id']),
         data=remove_id_tag(instance, ('id', 'tenant_id', 'schema_id', 'table_id')),

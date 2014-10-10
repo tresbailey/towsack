@@ -22,7 +22,7 @@ def json_clean(field_value):
    
 
 class AppModel(AbstractConcreteBase, DB.Model):
-    filter_fields = ('validate', 'clean4_dump', 'get', 'instance_data', 'table', 'query_class', 'has_key', 'filter_out_fields', 'filter_fields', 'query', 'type', 'metadata')
+    filter_fields = ('validate', 'clean4_dump', 'get', 'table', 'query_class', 'has_key', 'filter_out_fields', 'filter_fields', 'query', 'type', 'metadata')
 
     @classmethod
     def has_key(cls, key):

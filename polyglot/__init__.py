@@ -42,7 +42,6 @@ LM = LoginManager()
 LM.init_app(APP)
 principals = Principal(APP)
 
-
 from polyglot.rest.handlers import errors
 APP.register_blueprint(errors)
 from polyglot.rest.meta import meta

@@ -15,7 +15,17 @@ from polyglot.rest import remove_OIDs
 def retrieve_all_instances(tenant_id, schema_id, table_id):
     """
     """
-    return Instance.query.filter_by(schema_id=schema_id, table_id=table_id).all()
+    return Instance.query.filter_by(tenant_id=tenant_id,
+        schema_id=schema_id, 
+        table_id=table_id).all()
+
+def retrieve_one_instance(tenant_id, schema_id, table_id, instance_id):
+    """
+    """
+    return Instance.query.filter_by(tenant_id=tenant_id,
+        schema_id=schema_id,
+        table_id=table_id,
+        id=instance_id).one()
 
 
 def save_instance(instance, tenant_id, schema_id, table_id, instance_id):
