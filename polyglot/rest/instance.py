@@ -1,6 +1,6 @@
 import json
 import uuid
-from flask import Blueprint, request, g, jsonify
+from flask import Blueprint, request, g, jsonify, make_response
 from polyglot import DB
 from polyglot.models.schema import Schema, Table, Field, Instance
 from polyglot.pyapi import filter_fields
@@ -17,7 +17,15 @@ instances = Blueprint('instance_apis', __name__,
 def get_all_instances(tenant_id, schema_id, table_id):
     """
     """
-    return unwrap_response([instance for instance in retrieve_all_instances(tenant_id, schema_id, table_id)])
+    return unwrap_response([instance for instance in retrieve_all_instances(tenant_id, schema_id, table_id, query_filters=add_filter_fields())])
+
+
+def add_filter_fields():
+    field_list = request.args.getlist('qfield')
+    value_list = request.args.getlist('qvalue')
+    if len(field_list) != len(value_list):
+        return dict()
+    return dict(zip(field_list, value_list))
 
 
 @instances.route('/tenants/<tenant_id>/schemas/<schema_id>/tables/<table_id>/instances/<instance_id>',
