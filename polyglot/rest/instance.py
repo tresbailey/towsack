@@ -1,6 +1,6 @@
 import json
 import uuid
-from flask import Blueprint, request, g, jsonify, make_response
+from flask import Blueprint, request, g, make_response
 from polyglot import DB
 from polyglot.models.schema import Schema, Table, Field, Instance
 from polyglot.pyapi import filter_fields
@@ -45,3 +45,10 @@ def save_new_instance(tenant_id, schema_id, table_id):
     instance = save_instance(json.loads(request.data), tenant_id, schema_id, table_id, uuid.uuid4())
     return unwrap_response(instance)
 
+
+@instances.route('/tenants/<tenant_id>/schemas/<schema_id>/tables/<table_id>/instances/<instance_id>', methods=['PUT'])
+def update_existing_instance(tenant_id, schema_id, table_id, instance_id):
+    """
+    """
+    instance = save_instance(json.loads(request.data), tenant_id, schema_id, table_id, instance_id)
+    return unwrap_response(instance)

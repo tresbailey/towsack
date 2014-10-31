@@ -1,9 +1,10 @@
 """ All the ReSTful APIs for the app are defined as HTTP endpoints in this module """
 import collections
 from datetime import datetime
-from flask import Flask, g, request, url_for
+from flask import Flask, g, request, url_for, Response
 from json import dumps
 from polyglot import DB, APP
+from polyglot.errors import BadRequestError, ResourceNotFoundException
 from polyglot.models import AppModel
 from polyglot.pyapi import filter_fields
 from urlparse import urlparse, urljoin
@@ -32,7 +33,7 @@ def unwrap_response(response, **kwargs):
         new_response = [query_args(sub_res) for sub_res in response]
     else:    
         new_response = query_args(response)
-    return dumps(new_response, default=remove_OIDs)
+    return Response(dumps(new_response, default=remove_OIDs), mimetype="application/json")
 
 
 def query_args(new_response, filters=[]):
@@ -47,4 +48,3 @@ def query_args(new_response, filters=[]):
         filters = list(set(filters) - grab)
         new_response = filter_fields(new_response, keys + filters)
     return new_response
-                

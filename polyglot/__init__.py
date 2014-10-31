@@ -42,12 +42,13 @@ LM = LoginManager()
 LM.init_app(APP)
 principals = Principal(APP)
 
-from polyglot.rest.handlers import errors
-APP.register_blueprint(errors)
 from polyglot.rest.meta import meta
 APP.register_blueprint(meta)
 from polyglot.rest.instance import instances
 APP.register_blueprint(instances)
+from polyglot.rest.validations import val_funks
+APP.register_blueprint(val_funks)
+from polyglot.rest.handlers import handle_not_found, handle_excpetions, handle_bad_id
 
 if __name__ == '__main__':
     APP.run('127.0.0.1', threaded=True)
