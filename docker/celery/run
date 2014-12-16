@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+# Add code to start the celery worker via `celery -A <module> worker`
