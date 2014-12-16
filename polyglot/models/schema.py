@@ -8,7 +8,7 @@ from uuid import UUID
 
 
 class Instance(AppModel):
-    _tablename__ = 'instances'
+    __tablename__ = 'instances'
     id = Column(GUID, primary_key=True)
     tenant_id = Column(GUID, ForeignKey('tenants.id'))
     schema_id = Column(GUID, ForeignKey('schemas.id'))
