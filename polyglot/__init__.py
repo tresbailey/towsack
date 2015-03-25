@@ -24,8 +24,8 @@ APP.secret_key = str(uuid.uuid1())
 
 
 
-APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://docker:docker@192.168.59.103:49155/docker'
-APP.config['REDIS_URL'] = "redis://localhost:6379/3"
+APP.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%s:%s@%s:%s/%s' % (os.getenv('PG_USER'), os.getenv('PG_PASS'), 'pg', os.getenv('PG_PORT'), os.getenv('PG_DBNAME'))
+APP.config['REDIS_URL'] = "redis://%s:%s/3" % (os.getenv('REDIS_HOST', 'localhost'), os.getenv('REDIS_PORT', '6379'))
 APP.config['REDIS_HASH_FBN'] = 'field_by_name'
 
 DB = SQLAlchemy(APP)

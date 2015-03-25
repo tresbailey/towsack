@@ -26,7 +26,7 @@ class Unique(AppModel):
     tenant_id = Column(GUID, ForeignKey('tenants.id'))
     schema_id = Column(GUID, ForeignKey('schemas.id'))
     table_id = Column(GUID, ForeignKey('tables.id'))
-    instance_id = Column(GUID, ForeignKey('instance.id'))
+    instance_id = Column(GUID, ForeignKey('instances.id'))
     unique_value = Column(JSONB)
     _validations = {
         'tenant_id': ((is_type, UUID),),
@@ -44,7 +44,7 @@ class Index(AppModel):
     tenant_id = Column(GUID, ForeignKey('tenants.id'))
     schema_id = Column(GUID, ForeignKey('schemas.id'))
     table_id = Column(GUID, ForeignKey('tables.id'))
-    instance_id = Column(GUID, ForeignKey('instance.id'))
+    instance_id = Column(GUID, ForeignKey('instances.id'))
     index_value = Column(JSONB)
     _validations = {
         'tenant_id': ((is_type, UUID),),

@@ -58,9 +58,9 @@ def save_instance(instance, tenant_id, schema_id, table_id, instance_id):
     fields = retrieve_schema_table_fields(tenant_id, schema_id, table_id)
     instance = instance_object(id=instance_id, tenant_id=tenant_id, schema_id=schema_id, table_id=table_id, instance_data=instance)
     DB.session.add(instance)
-    save_unique_values(instance, fields)
-    save_index_values(instance, fields)
     DB.session.commit()
+    save_unique_values(instance, tenant_id, schema_id, table_id, fields)
+    save_index_values(instance, tenant_id, schema_id, table_id, fields)
     return instance
 
 
@@ -90,13 +90,13 @@ def create_instance_validators(fields=[]):
     return validators
 
 
-def save_unique_values(instance, fields=[]):
+def save_unique_values(instance, tenant_id, schema_id, table_id, fields=[]):
     unique_fields  = [save_unique({field.field_name: getitem(instance.instance_data, field.field_name)}, tenant_id, schema_id, table_id, instance.id)
          for field in fields if [unique_field_value.__name__, u'True'] in field.constraints]
     return unique_fields
    
 
-def save_index_values(instance, fields=[]):
+def save_index_values(instance, tenant_id, schema_id, table_id, fields=[]):
     unique_fields  = [save_indexed({field.field_name: getitem(instance.instance_data, field.field_name)}, tenant_id, schema_id, table_id, instance.id)
          for field in fields if field.index_single]
 

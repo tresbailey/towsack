@@ -228,6 +228,28 @@ def unique_field_value(verifield, unique_to_check):
     return not value_combo_exists(verifield, **unique_to_check)
 
 
+def local_type(verifield, type_name):
+    """ Checks if a field conforms to the local table definition, which is basically a join/sub-object
+
+    :param type_name: URI of the tenant.schema.table Ids that would be reference of the object to validate against
+    :type type_name: URI
+    :returns: bool
+    """
+    from polyglot.pyapi.meta import retrieve_schema_table_fields
+    from polyglot.pyapi.instance import create_instance_validators
+    from polyglot.models.schema import Instance
+    (tenant_id, schema_id, table_id) = type_name.split("::")
+    fields = retrieve_schema_table_fields(tenant_id, schema_id, table_id)
+    validators = Instance._validations
+    validators['instance_data'] = create_instance_validators(fields)
+    instance = Instance(**instance)
+    instance.validate(validators)
+    instance._validations = validators
+    return not((hasattr(instance, 'validation_errors') 
+        and instance.validation_errors) \
+    or instance.instance_data.get('validation_errors', {})) 
+
+
 class CallableClass:
 
     def __init__(self, function, additional_info):

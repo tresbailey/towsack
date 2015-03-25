@@ -37,6 +37,11 @@ def unwrap_response(response, **kwargs):
 
 
 def query_args(new_response, filters=[]):
+    """
+    Method to unwrap and filter fields that are returned by a JSON REST response
+    The 'grab' query arg is intended to be like select columns to reduce the number of fileds returned
+    The 'unwrap' query arg is intended to get a field from the top level obj to be the return value
+    """
     if hasattr(new_response, 'clean4_dump'):
         new_response = new_response.clean4_dump()
     for key in request.args.getlist('unwrap'):
